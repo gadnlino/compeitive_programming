@@ -1,4 +1,4 @@
-# compeitive_programming
+# competitive_programming
 Resolução de problemas da Maratona de Programação.
 
 Os sites em que realizo mais submissões são :
