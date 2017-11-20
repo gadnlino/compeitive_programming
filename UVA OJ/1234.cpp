@@ -1,36 +1,98 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <cstdio>
 #define ii pair<int,int>
-#define pip pair<int,ii>
+#define vip pair<int,ii>
 #define st first
 #define nd second
+#define MAXN 100000
+
 using namespace std;
 
-vector<pip> arestas;
+int pai[MAXN];
+int tam[MAXN];
 
-int main(void)
+int find(int a)
 {
-  int tc;
-  while(true)
-  {
-    scanf("%d",&tc);
-    if(tc == 0) break;
+   if(a == pai[a]) return a;
+   return pai[a] = find(pai[a]);
+}
 
-    for(int i = 0;i < tc;i++)
-    {
-      int n,m;
-      scanf("%d %d",&n,&m);
+void unir(int a,int b)
+{
+   a = find(a);
+   b = find(b);
 
-      for(int j = 0;j < m;j++)
+   if(tam[a] >= tam[b])
+   {
+      pai[b] = a;
+      tam[a] += tam[b];
+   }
+   else
+   {
+      pai[a] = b;
+      tam[b] += tam[a];
+   }
+}
+
+void init()
+{
+   for(int i = 0;i < MAXN;i++)
+   {
+      pai[i] = i;
+      tam[i] = 1;
+   }
+}
+
+int main()
+{
+   int tc;
+   while(true)
+   {
+
+      scanf("%d",&tc);
+      if(tc == 0) break;
+
+      for(int i = 0;i < tc;i++)
       {
-          int u,v,c;
-          scanf("%d %d %d",&u,&v,&c);
-          ii aresta = make_pair(u,v);
-          arestas.push_back(make_pair(c,aresta));
+         vector<vip> arestas;
+         
+         int n,m;
+         scanf("%d %d",&n,&m);
+
+         init();
+
+         for(int j = 0;j < m;j++)
+         {
+            int u,v,c;
+            scanf("%d %d %d",&u,&v,&c);
+            arestas.push_back(make_pair(-c,make_pair(u-1,v-1)));
+         }
+
+         sort(arestas.begin(),arestas.end());
+         int soma = 0;
+
+         for(int j = 0;j <(int)arestas.size();j++ )
+         {
+            int u = arestas[j].nd.st;
+            int v = arestas[j].nd.nd;
+            int cst = arestas[j].st;
+
+            if(find(u) != find(v))
+            {
+               unir(u,v);
+            }
+            else
+            {
+               // printf("ciclo\n");
+               soma += -cst;
+            }
+         }
+
+         printf("%d\n",soma);
       }
-    }
-  }
+   }
 
-
-
-  return 0;
+   return 0;
 }
